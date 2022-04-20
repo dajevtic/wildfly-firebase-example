@@ -4,7 +4,7 @@ This code is a proof-of-concept using Firebase Admin to authenticate users via a
 Follow the instrucations for setting up the auth mechanism under
 https://github.com/dajevtic/wildfly-firebase-mechanism
 
-Under src/main/webapp/login/login.xhtml add your configuration for wildfly. see
+Under src/main/webapp/login/login.xhtml add your configuration for firebase. see
 YOUR_FIREBASE_CONFIG_HERE and YOUR_CLIENT_ID_HERE
 
 Use the experimental extension for your firebase project under
