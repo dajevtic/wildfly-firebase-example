@@ -1,0 +1,3 @@
+<jboss-web>
+    <security-domain>firebase-domain</security-domain>
+</jboss-web>

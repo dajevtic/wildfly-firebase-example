@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://java.sun.com/jsf/html"
+      xmlns:f="http://java.sun.com/jsf/core"
+      xmlns:p="http://primefaces.org/ui">
+
+<f:view transient="true" locale="#{request.locale}">
+
+    <h:head>
+
+        <f:facet name="first">
+            <meta http-equiv="X-UA-Compatible" content="IE=edge"/>
+            <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
+            <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0"/>
+            <meta name="apple-mobile-web-app-capable" content="yes"/>
+        </f:facet>
+        <title>Wildfly Firebase Example</title>
+
+        <link type="text/css" rel="stylesheet" href="https://www.gstatic.com/firebasejs/ui/6.0.1/firebase-ui-auth.css"/>
+        <link rel='icon' type='image/x-icon' href='#{request.contextPath}/favicon.ico' />
+
+    </h:head>
+
+    <h:body>
+
+        <p:panel header="Simple JSF Primefaces Test Panel">
+
+            <div id="firebaseui-auth-container">Please Login</div>
+            <div id="loader">Loading...</div>
+
+        </p:panel>
+
+        <script src="https://www.gstatic.com/firebasejs/9.6.9/firebase-app-compat.js"></script>
+        <script src="https://www.gstatic.com/firebasejs/9.6.9/firebase-auth-compat.js"></script>
+        <script src="https://www.gstatic.com/firebasejs/ui/6.0.1/firebase-ui-auth.js"></script>
+
+        <script type="text/javascript">
+
+            const firebaseConfig = {
+                // YOUR_FIREBASE_CONFIG_HERE
+            };
+
+            const app = firebase.initializeApp(firebaseConfig);
+
+            const uiConfig = {
+                signInFlow: 'popup',
+                callbacks: {
+                    signInSuccessWithAuthResult: function (authResult, redirectUrl) {
+                        authResult.user.getIdTokenResult(false).then(function(result) {
+
+                            $.post({
+                                url: 'j_security_check',
+                                data: {'j_username': authResult.user.email, 'j_password': result.token},
+                            }).then(function (data) {
+                                window.location.reload();
+                            }).catch(function(e) {
+                                console.log(e);
+                                window.location.reload();
+                            });
+
+                        });
+
+                        return false;
+                    },
+                    signInFailure: function (error) {
+                        console.log(error);
+                    },
+                    uiShown: function () {
+                        document.getElementById('loader').style.display = 'none';
+                    }
+                },
+                signInOptions: [
+                    {
+                        // Leave the lines as is for the providers you want to offer your users.
+                        provider: firebase.auth.GoogleAuthProvider.PROVIDER_ID,
+                        clientId: 'YOUR_CLIENT_ID_HERE'
+
+                    },
+                    firebase.auth.EmailAuthProvider.PROVIDER_ID,
+                ],
+            };
+
+            // Initialize the FirebaseUI Widget using Firebase.
+            const ui = new firebaseui.auth.AuthUI(firebase.auth());
+            // The start method will wait until the DOM is loaded.
+            ui.start('#firebaseui-auth-container', uiConfig);
+
+        </script>
+
+    </h:body>
+</f:view>
+</html>

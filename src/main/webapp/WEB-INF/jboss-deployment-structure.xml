@@ -1,0 +1,7 @@
+<jboss-deployment-structure>
+    <deployment>
+        <dependencies>
+            <module name="de.elb.wildfly.firebase" />
+        </dependencies>
+    </deployment>
+</jboss-deployment-structure>
